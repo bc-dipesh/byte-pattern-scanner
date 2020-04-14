@@ -22,5 +22,6 @@ public class App {
 
 		// ... Display the app.
 		view.setVisible(true);
+
 	}
 }

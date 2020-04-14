@@ -1,11 +1,19 @@
 package com.bcdipesh.model;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,6 +35,9 @@ public class BytePatternMatcher {
 	// ... Flag to determine whether user selected a file or a directory.
 	private boolean isDirSelected;
 	private boolean isFileSelected;
+
+	// ... Total files count in directory will be stored here.
+	private int fileCount;
 
 	/**
 	 * Creates an object of this class. Creating object using this constructor will
@@ -146,6 +157,17 @@ public class BytePatternMatcher {
 	 */
 	public boolean getIsFileSelected() {
 		return isFileSelected;
+	}
+
+	/**
+	 * Gets the total file count present inside a directory. Note: This function
+	 * only counts the total files present in a directory of depth 1, i.e., it won't
+	 * count files inside sub-directories.
+	 * 
+	 * @return Returns the total file count inside a directory.
+	 */
+	public int getFileCount() {
+		return fileCount;
 	}
 
 	// ... Helper functions.
@@ -291,6 +313,9 @@ public class BytePatternMatcher {
 		try (Stream<Path> walk = Files.walk(Paths.get(dir.getPath()))) {
 			// ... Filter files and get the path of all the files within that directory.
 			List<String> result = walk.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
+
+			// ... Store the file count.
+			fileCount = result.size();
 
 			// ... Read the file specified by the path and store it.
 			for (String path : result) {

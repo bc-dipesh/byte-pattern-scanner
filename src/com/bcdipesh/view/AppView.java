@@ -1,12 +1,26 @@
 package com.bcdipesh.view;
 
-import mdlaf.MaterialLookAndFeel;
-import mdlaf.themes.MaterialLiteTheme;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.MaterialLiteTheme;
 
 /**
  * Represents the View Component of the application.
@@ -297,4 +311,14 @@ public class AppView extends JFrame {
 		searchResults.setText(result);
 	}
 
+	// ... Getters to get UI components
+
+	/**
+	 * Gets the loadDataFromDir JLabel.
+	 * 
+	 * @return Returns a JLabel for the controller to manipulate.
+	 */
+	public JLabel getLoadDataFromDirLabel() {
+		return loadDataFromDirLabel;
+	}
 }
