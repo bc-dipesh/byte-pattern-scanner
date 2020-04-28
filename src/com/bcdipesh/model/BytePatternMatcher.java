@@ -1,21 +1,12 @@
 package com.bcdipesh.model;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import com.bcdipesh.patternMatcherUtils.PatternMatcherUtility;
 
 /**
  * Provides byte pattern matching operations.
@@ -35,9 +26,6 @@ public class BytePatternMatcher {
 	// ... Flag to determine whether user selected a file or a directory.
 	private boolean isDirSelected;
 	private boolean isFileSelected;
-
-	// ... Total files count in directory will be stored here.
-	private int fileCount;
 
 	/**
 	 * Creates an object of this class. Creating object using this constructor will
@@ -78,7 +66,7 @@ public class BytePatternMatcher {
 	 *                     invalid.
 	 */
 	public void setFile(File file) throws IOException {
-		fileBytesArray = readFile(file);
+		fileBytesArray = PatternMatcherUtility.readFile(file);
 	}
 
 	/**
@@ -91,7 +79,7 @@ public class BytePatternMatcher {
 	 *                     invalid.
 	 */
 	public void setDir(File dir) throws IOException {
-		dirBytes = readDirectory(dir);
+		dirBytes = PatternMatcherUtility.readDirectory(dir);
 	}
 
 	/**
@@ -103,7 +91,7 @@ public class BytePatternMatcher {
 	 * @throws IOException Throws an {@link IOException} if the file is invalid.
 	 */
 	public void setPattern(File file) throws IOException {
-		patternListArray = readPatternFile(file);
+		patternListArray = PatternMatcherUtility.readPatternFile(file);
 	}
 
 	/**
@@ -159,17 +147,6 @@ public class BytePatternMatcher {
 		return isFileSelected;
 	}
 
-	/**
-	 * Gets the total file count present inside a directory. Note: This function
-	 * only counts the total files present in a directory of depth 1, i.e., it won't
-	 * count files inside sub-directories.
-	 * 
-	 * @return Returns the total file count inside a directory.
-	 */
-	public int getFileCount() {
-		return fileCount;
-	}
-
 	// ... Helper functions.
 
 	/**
@@ -188,12 +165,12 @@ public class BytePatternMatcher {
 	private TreeMap<Integer, byte[]> indexOfPattern(TreeMap<String, ArrayList<Byte>> source,
 			ArrayList<byte[]> patternList) {
 		TreeMap<Integer, byte[]> answer = new TreeMap<>();
-		TreeMap<Integer, byte[]> answerHolder;
+		TreeMap<Integer, byte[]> resultMap;
 
 		for (Map.Entry<String, ArrayList<Byte>> entry : source.entrySet()) {
-			answerHolder = indexOfPattern(entry.getValue(), patternList);
-			answer.putAll(answerHolder);
-			foundPatterns.put(new File(entry.getKey()).getName(), answerHolder);
+			resultMap = indexOfPattern(entry.getValue(), patternList);
+			answer.putAll(resultMap);
+			foundPatterns.put(entry.getKey(), resultMap);
 		}
 
 		return answer;
@@ -269,108 +246,4 @@ public class BytePatternMatcher {
 		}
 		return answer;
 	}
-
-	/**
-	 * Reads a file. This function reads source file as bytes and stores them into
-	 * fileBytes.
-	 *
-	 * @param file The source file to be read.
-	 * @return Returns an ArrayList of Byte generated after reading the file passed
-	 *         to it.
-	 * @throws IOException Throws an {@link IOException} if the file passed to it is
-	 *                     invalid.
-	 */
-	private ArrayList<Byte> readFile(File file) throws IOException {
-		ArrayList<Byte> fileBytes = new ArrayList<>();
-		try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
-			int nextByte;
-			byte currentByte;
-			// ... loop until the end of the file and store the bytes.
-			while ((nextByte = is.read()) != -1) {
-				currentByte = (byte) nextByte;
-				fileBytes.add(currentByte);
-			}
-		}
-
-		return fileBytes;
-	}
-
-	/**
-	 * Reads a directory. This function reads a directory containing multiple source
-	 * files.
-	 *
-	 * @param dir The file containing multiple source files.
-	 * @return Returns a TreeMap with String that represents the file name inside
-	 *         directory as key, and an ArrayList of Byte that represents the bytes
-	 *         of content within the file as value.
-	 * @throws IOException Throws an {@link IOException} if the file passed to it is
-	 *                     invalid.
-	 */
-	private TreeMap<String, ArrayList<Byte>> readDirectory(File dir) throws IOException {
-		TreeMap<String, ArrayList<Byte>> dirBytes = new TreeMap<>();
-
-		// ... Scan the directory.
-		try (Stream<Path> walk = Files.walk(Paths.get(dir.getPath()))) {
-			// ... Filter files and get the path of all the files within that directory.
-			List<String> result = walk.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
-
-			// ... Store the file count.
-			fileCount = result.size();
-
-			// ... Read the file specified by the path and store it.
-			for (String path : result) {
-				dirBytes.put(path, readFile(new File(path)));
-			}
-
-		}
-		return dirBytes;
-	}
-
-	/**
-	 * Reads a pattern file. This function reads a pattern file containing
-	 * pattern/patterns to be searched.
-	 *
-	 * @param file The file to be read.
-	 * @return Returns an ArrayList of byte[] containing list of pattern/patterns to
-	 *         be searched.
-	 * @throws IOException Throws an {@link IOException} if the file passed to it is
-	 *                     invalid.
-	 */
-	private ArrayList<byte[]> readPatternFile(File file) throws IOException {
-		try (Stream<String> line = Files.lines(Paths.get(file.getAbsolutePath()))) {
-			return line.map(row -> row.split("\\s")).map(this::convertToByteArray)
-					.collect(Collectors.toCollection(ArrayList::new));
-		}
-	}
-
-	/**
-	 * Gets a byte array given a hexadecimal string. This function converts a
-	 * hexadecimal string to return a byte array.
-	 *
-	 * @param hexString A string representing hexadecimal number.
-	 * @return Returns a byte[] that represents the hexadecimal number.
-	 */
-	private byte[] getByteArray(String hexString) {
-		byte[] byteArray = new BigInteger(hexString, 16).toByteArray();
-		if (byteArray[0] == 0) {
-			byte[] output = new byte[byteArray.length - 1];
-			System.arraycopy(byteArray, 1, output, 0, output.length);
-			return output;
-		}
-		return byteArray;
-	}
-
-	/**
-	 * Converts a string[] to byte array. This function converts a string[]
-	 * representing hexadecimal numbers to a byte array.
-	 *
-	 * @param line A String array representing hexadecimal values.
-	 * @return Returns a byte[] of hexadecimal values.
-	 */
-	private byte[] convertToByteArray(String[] line) {
-		String lineString = Arrays.toString(line).replaceAll("[,\\s\\[\\]]", "");
-
-		return getByteArray(lineString);
-	}
-
 }

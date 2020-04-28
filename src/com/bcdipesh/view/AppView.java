@@ -28,6 +28,7 @@ import mdlaf.themes.MaterialLiteTheme;
  * @author Dipesh B.C.
  * @version 2.0
  */
+@SuppressWarnings("serial")
 public class AppView extends JFrame {
 
 	// ... Components for the view.

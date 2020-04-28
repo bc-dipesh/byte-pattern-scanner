@@ -12,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.bcdipesh.model.BytePatternMatcher;
+import com.bcdipesh.patternMatcherUtils.PatternMatcherUtility;
 import com.bcdipesh.view.AppView;
 
 /**
@@ -25,6 +26,8 @@ public class AppController {
 	// ... The Model and View that the controller will interact with.
 	private final BytePatternMatcher model;
 	private final AppView view;
+
+	private int totalFilesInDir = 0;
 
 	/**
 	 * Creates a AppController Object that will link to the model, and the view
@@ -99,6 +102,7 @@ public class AppController {
 				try {
 					// ... Update the directory name and flag in the view.
 					model.setDir(dir);
+					totalFilesInDir = PatternMatcherUtility.countTotalFilesInDir(dir);
 					model.setIsDirectorySelected(true);
 					model.setIsFileSelected(false);
 					view.setLoadDataFromDirLabel(dir.getName());
@@ -200,12 +204,12 @@ public class AppController {
 				}
 				// ... Check if the result is not empty and user has scanned a directory.
 			} else if (!result.isEmpty() && model.getIsDirectorySelected()) {
-				// ... Get the total files inside the directory
-				int fileCount = model.getFileCount();
+
 				String dirName = view.getLoadDataFromDirLabel().getText();
 
 				// ... Pre-formatting
-				resultTxt.append("Directory: ").append(dirName).append("\t(").append(fileCount).append(" files)\n");
+				resultTxt.append("Directory: ").append(dirName).append("\t(").append(totalFilesInDir)
+						.append(" files)\n");
 
 				// ... Get the file name and the results of scanning within that file.
 				TreeMap<String, TreeMap<Integer, byte[]>> foundPatterns = model.getFoundPatterns();
