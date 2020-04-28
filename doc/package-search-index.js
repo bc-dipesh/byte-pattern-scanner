@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.bcdipesh.controller"},{"l":"com.bcdipesh.model"},{"l":"com.bcdipesh.view"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.bcdipesh.controller"},{"l":"com.bcdipesh.model"},{"l":"com.bcdipesh.patternMatcherUtils"},{"l":"com.bcdipesh.test"},{"l":"com.bcdipesh.view"}]

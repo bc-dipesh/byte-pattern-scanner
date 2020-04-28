@@ -1,4 +1,6 @@
 com.bcdipesh
 com.bcdipesh.controller
 com.bcdipesh.model
+com.bcdipesh.patternMatcherUtils
+com.bcdipesh.test
 com.bcdipesh.view
