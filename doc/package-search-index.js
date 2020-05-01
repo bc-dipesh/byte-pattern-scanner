@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.bcdipesh.controller"},{"l":"com.bcdipesh.model"},{"l":"com.bcdipesh.patternMatcherUtils"},{"l":"com.bcdipesh.test"},{"l":"com.bcdipesh.view"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"main.java.com.bcdipesh"},{"l":"main.java.com.bcdipesh.controller"},{"l":"main.java.com.bcdipesh.model"},{"l":"main.java.com.bcdipesh.utilities"},{"l":"main.java.com.bcdipesh.view"},{"l":"test.java"}]

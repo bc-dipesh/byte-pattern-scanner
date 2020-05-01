@@ -1,6 +1,6 @@
-com.bcdipesh
-com.bcdipesh.controller
-com.bcdipesh.model
-com.bcdipesh.patternMatcherUtils
-com.bcdipesh.test
-com.bcdipesh.view
+main.java.com.bcdipesh
+main.java.com.bcdipesh.controller
+main.java.com.bcdipesh.model
+main.java.com.bcdipesh.utilities
+main.java.com.bcdipesh.view
+test.java
